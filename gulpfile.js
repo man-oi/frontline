@@ -1,4 +1,5 @@
 const gulp = require('gulp');
+const imagemin = require('gulp-imagemin');
 const sourcemaps = require('gulp-sourcemaps');
 const sass = require('gulp-sass');
 const postcss = require('gulp-postcss');
@@ -14,12 +15,14 @@ const config = {
   paths: {
     src: {
       html: 'src/html',
-      scss: 'src/scss'
+      scss: 'src/scss',
+      img: 'src/images'
     },
 
     dist: {
       root: 'dist',
-      css: 'dist/css'
+      css: 'dist/css',
+      img: 'dist/assets/images'
     }
   }
 }
@@ -65,6 +68,21 @@ const buildHTML = () => {
     .pipe(gulp.dest(`${config.paths.dist.root}/`));
 }
 
+const optimizeImages = () => {
+  return gulp.src(`${config.paths.src.img}/**/*.{png,jpg,svg}`)
+    .pipe(imagemin([
+      imagemin.mozjpeg({quality: 75, progressive: true}),
+      imagemin.optipng({optimizationLevel: 5}),
+      imagemin.svgo({
+        plugins: [
+          {removeViewBox: true},
+          {cleanupIDs: false}
+        ]
+      })
+    ]))
+    .pipe(gulp.dest(config.paths.dist.img));
+}
+
 
 // WATCHERS
 const watch = () => {
@@ -73,6 +91,10 @@ const watch = () => {
   ));
   gulp.watch(`${config.paths.src.html}/**/*.html`, gulp.series(
     buildHTML,
+    reloadServer,
+  ));
+  gulp.watch(`${config.paths.src.img}/**/*.{png,jpg,svg}`, gulp.series(
+    optimizeImages,
     reloadServer,
   ));
 }
@@ -84,6 +106,7 @@ exports.dev = gulp.series(
   gulp.parallel(
     buildCSS,
     buildHTML,
+    optimizeImages,
   ),
   startServer,
   watch,
