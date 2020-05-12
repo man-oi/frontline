@@ -16,13 +16,15 @@ const config = {
     src: {
       html: 'src/html',
       scss: 'src/scss',
-      img: 'src/images'
+      img: 'src/images',
+      fonts: 'src/fonts',
     },
 
     dist: {
       root: 'dist',
       css: 'dist/css',
-      img: 'dist/assets/images'
+      img: 'dist/assets/images',
+      fonts: 'dist/assets/fonts',
     }
   }
 }
@@ -83,6 +85,11 @@ const optimizeImages = () => {
     .pipe(gulp.dest(config.paths.dist.img));
 }
 
+const copyFonts = () => {
+  return gulp.src(`${config.paths.src.fonts}/**/*`)
+    .pipe(gulp.dest(`${config.paths.dist.fonts}`));
+}
+
 
 // WATCHERS
 const watch = () => {
@@ -97,6 +104,10 @@ const watch = () => {
     optimizeImages,
     reloadServer,
   ));
+  gulp.watch(`${config.paths.src.fonts}/**/*`, gulp.series(
+    copyFonts,
+    reloadServer,
+  ));
 }
 
 
@@ -107,7 +118,18 @@ exports.dev = gulp.series(
     buildCSS,
     buildHTML,
     optimizeImages,
+    copyFonts,
   ),
   startServer,
   watch,
+);
+
+exports.build = gulp.series(
+  cleanDist,
+  gulp.parallel(
+    buildCSS,
+    buildHTML,
+    optimizeImages,
+    copyFonts,
+  ),
 );
