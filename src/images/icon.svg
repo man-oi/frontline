@@ -1,0 +1,11 @@
+<svg>
+<symbol viewBox="0 0 52.496 49" id="basket">
+        <g transform="translate(90.519 -196.354)">
+            <g transform="translate(-90.519 196.354)">
+                <path d="M-107.917,255.227l-2.132-10.212H-121.4v4.6h7.888l6.96,32.97.043.2h31.364l5.5-25.066.743-2.49Zm4.842,22.96-3.88-18.371h32.435l-4.032,18.371Z" transform="translate(121.403 -245.015)"></path>
+                <circle cx="4.34" cy="4.34" r="4.34" transform="translate(16.606 40.32)"></circle>
+                <circle cx="4.34" cy="4.34" r="4.34" transform="translate(31.685 40.32)"></circle>
+            </g>
+        </g>
+    </symbol>
+</svg>
